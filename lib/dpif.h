@@ -702,6 +702,18 @@ struct dpif_execute {
 
     /* Input, but possibly modified as a side effect of execution. */
     struct dp_packet *packet;          /* Packet to execute. */
+
+
+    /*
+     * Add the CAB extra attributes.
+     */
+
+    /* flag indicates CAB or not. */
+    int flag;
+    /* rule priority */
+    int priority;
+    /* CAB id */
+    int cab_id;
 };
 
 /* Queries the dpif for a flow entry.
@@ -788,6 +800,13 @@ struct dpif_upcall {
     struct nlattr *userdata;    /* Argument to OVS_ACTION_ATTR_USERSPACE. */
     struct nlattr *out_tun_key;    /* Output tunnel key. */
     struct nlattr *actions;    /* Argument to OVS_ACTION_ATTR_USERSPACE. */
+
+    /* flag indicates CAB or not. */
+    int flag;
+    /* rule priority */
+    int priority;
+    /* CAB id */
+    int cab_id;
 };
 
 /* A callback to notify higher layer of dpif about to be purged, so that

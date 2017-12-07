@@ -215,6 +215,14 @@ struct upcall {
     const struct nlattr *out_tun_key;  /* Datapath output tunnel key. */
 
     uint64_t odp_actions_stub[1024 / 8]; /* Stub for odp_actions. */
+
+    /* add CAB attributes to temp upcall */
+    /* flag indicates CAB or not. */
+    int flag;
+    /* rule priority */
+    int priority;
+    /* CAB id */
+    int cab_id;
 };
 
 /* 'udpif_key's are responsible for tracking the little bit of state udpif
@@ -734,6 +742,19 @@ recv_upcalls(struct handler *handler)
             ofpbuf_uninit(recv_buf);
             break;
         }
+
+        /* CAB branch */
+		if (dupcall->flag) {
+			/* CAB process */
+
+			/* add CAB attributes to upcall */
+			upcall->flag = dupcall->flag;
+			upcall->priority = dupcall->priority;
+			upcall->cab_id = dupcall->cab_id;
+
+
+		}
+
 
         if (odp_flow_key_to_flow(dupcall->key, dupcall->key_len, flow)
             == ODP_FIT_ERROR) {
